@@ -7,8 +7,9 @@ mixin Comment(object)
   .comment-box
    p.comment-box-text= object.text
    .icon-box
-    i.fa-regular.fa-thumbs-up.like-icon
-    span= (object.totalLikes || 0) < 1 ? 0 : object.totalLikes
+    button(data-commentId=object.id).like-comment
+     i.fa-regular.fa-thumbs-up.like-icon
+     span= (object.totalLikes || 0) < 1 ? 0 : object.totalLikes
     .reply-icon
      i.fa-regular.fa-message
      span Reply

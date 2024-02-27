@@ -69,10 +69,13 @@
     right:15px;
     bottom:25px;
    }
-   .like-thread{
+   .like-thread,.like-comment{
     border:none;
     background-color: transparent;
     transition: all 0.3s;
+   }
+   .like-comment i {
+    margin-right:.25rem;
    }
    .like-thread:hover{
     background-color: #acd1f8;

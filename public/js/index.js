@@ -5,6 +5,7 @@ import {createThread} from './createThread'
 import {createComment} from './createComment'
 import {createReply} from './createReply'
 import {addThreadLike} from './addThreadLike'
+import {addCommentLike} from './addCommentLike';
 
 //components and or buttons containing eventlistener
 const loginForm = document.querySelector('.form');
@@ -12,6 +13,7 @@ const createThreadBtn = document.querySelector('.create-post-btn');
 const createCommentBtn = document.querySelector('.submit-button');
 const createReplyBtn = document.querySelectorAll('.submit-reply');
 const threadLikeBtn = document.querySelector('.like-thread');
+const commentLikeBtn = document.querySelectorAll('.like-comment');
 
 //delegation
 if(loginForm)
@@ -70,4 +72,16 @@ document.querySelector('.form').addEventListener('submit', e => {
         const thread = threadLikeBtn.getAttribute('data-threadId');
  
           addThreadLike(thread);
+     });
+
+     if(commentLikeBtn)
+     commentLikeBtn.forEach(button => {
+       button.addEventListener('click', e => {
+         e.preventDefault();
+         
+         const comment = button.getAttribute('data-commentId');
+ 
+         addCommentLike(comment);
+        
+       });
      });
