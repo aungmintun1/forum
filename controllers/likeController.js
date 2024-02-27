@@ -23,7 +23,7 @@ exports.addLike = catchAsync(async (req,res,next) => {
 
     if(!req.body.thread) req.body.thread = req.params.threadId;
     if(!req.body.user) req.body.username = req.user.id;
-    console.log(req.user.id);
+   
 
     const newLike = await Like.create(req.body);
 

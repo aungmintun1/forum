@@ -4,7 +4,7 @@ export const createThread = async (question, description) => {
   try {
     const res = await axios({
       method: 'POST',
-      url: 'http://localhost:8000/threads/createThread',
+      url: '/threads/createThread',
       data: {
        question,
        description
