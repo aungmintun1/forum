@@ -28,26 +28,56 @@ exports.getThreads = catchAsync(async (req, res, next) => {
     
     //find user through id in URL and then populate shirts field
     const thread = await Thread.findById(req.params.threadId).populate('likes')
-    const commentsWithoutTotal = await Comment.find({ thread: req.params.threadId })
-    .populate('commentLikes')
-    .populate({
-      path: 'replies',
-      populate: {
+
+     const commentsWithoutTotal = await Comment.find({ thread: req.params.threadId })
+  .populate('commentLikes') // For top-level comments
+  .populate({
+    path: 'replies',
+    populate: [
+      { path: 'commentLikes' }, // Populate commentLikes for the first level of replies
+      {
         path: 'replies',
-        populate: {
-          path: 'replies' // Add further levels as needed
-          // ... You can continue adding more levels of 'populate' here
-        }
+        populate: [
+          { path: 'commentLikes' }, // Populate commentLikes for the second level of replies
+          {
+            path: 'replies',
+            populate: { 
+              path: 'commentLikes', // Continue this pattern as needed for deeper levels
+              // ... Any further nested levels would go here
+            }
+          }
+        ]
       }
-    });
+    ]
+  });
     
  
-    const comments = commentsWithoutTotal.map(comment => {
-      const commentObject = comment.toObject();
-      commentObject.totalLikes = comment.commentLikes.length;
+  const comments = commentsWithoutTotal.map(comment => {
+    //first map of total likes
+    const commentObject = comment.toObject();
+    commentObject.totalLikes = comment.commentLikes.length;
+    
+    //second map
+    if (commentObject.replies && commentObject.replies.length > 0) {
+      commentObject.replies = commentObject.replies.map(reply=>{
 
-      return commentObject;
-    });
+        const replyObject = reply;
+        replyObject.totalLikes= replyObject.commentLikes.length;
+
+        //third map
+        if (replyObject.replies && replyObject.replies.length > 0){
+          replyObject.replies = replyObject.replies.map(third=>{
+            const thirdObject = third;
+            thirdObject.totalLikes = thirdObject.commentLikes.length
+            return thirdObject;
+        })
+      }
+        return replyObject;
+      });
+    }
+
+    return commentObject;
+  });
 
 
     const totalComments = comments.length;
